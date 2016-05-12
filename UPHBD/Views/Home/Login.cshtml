@@ -1,0 +1,322 @@
+﻿@model UPHBD.Models.OfficerLogin
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>UP HOUSING & DEVELOPMENT BOARD</title>
+
+    <!-- Bootstrap core CSS -->
+
+    <!--Load main jquery*-->
+
+    <style>
+        #pool button
+        {
+            margin: 3px;
+            width: 80px;
+        }
+
+            #pool button i
+            {
+                float: right;
+                margin-top: 3px;
+            }
+
+                #pool button i:hover
+                {
+                    color: red;
+                }
+    </style>
+
+    <!-- Style CSS -->
+    <link href="~/Styles/style.css" rel="stylesheet" />
+    <link href="~/Styles/more-css.css" rel="stylesheet" />
+    <link href="~/Styles/bootstrap.css" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+
+
+@Html.Raw(TempData["msg"])
+
+    <style type="text/css">
+        body
+        {
+            -ms-background-size: cover;
+            background-size: cover;
+            font-family: Montserrat;
+            background: #0F75C8;
+            font-family: 'Droid Sans', sans-serif !important;
+        }
+
+        .login-block
+        {
+            width: 450px;
+            padding: 50px;
+            background: #fff;
+            -ms-border-radius: 5px;
+            border-radius: 5px;
+            border-top: 5px solid #454A4E;
+            margin: 40px auto;
+            font-family: 'Droid Sans', sans-serif !important;
+        }
+
+            .login-block h1
+            {
+                text-align: center;
+                color: #000;
+                font-size: 18px;
+                text-transform: uppercase;
+                margin-top: 0;
+                margin-bottom: 20px;
+                font-family: 'Droid Sans', sans-serif !important;
+            }
+
+            .login-block input
+            {
+                width: 100%;
+                height: 42px;
+                box-sizing: border-box;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                margin-bottom: 20px;
+                font-size: 14px;
+                font-family: Montserrat;
+                padding: 0 20px 0 50px;
+                outline: none;
+                font-family: 'Droid Sans', sans-serif !important;
+            }
+
+                .login-block input#username
+                {
+                    background: #fff url('http://i.imgur.com/u0XmBmv.png') 20px top no-repeat;
+                    background-size: 16px 80px;
+                    font-family: 'Droid Sans', sans-serif !important;
+                }
+
+                    .login-block input#username:focus
+                    {
+                        background: #fff url('http://i.imgur.com/u0XmBmv.png') 20px bottom no-repeat;
+                        background-size: 16px 80px;
+                        font-family: 'Droid Sans', sans-serif !important;
+                    }
+
+                .login-block input#password
+                {
+                    background: #fff url('http://i.imgur.com/Qf83FTt.png') 20px top no-repeat;
+                    background-size: 16px 80px;
+                    font-family: 'Droid Sans', sans-serif !important;
+                }
+
+                    .login-block input#password:focus
+                    {
+                        background: #fff url('http://i.imgur.com/Qf83FTt.png') 20px bottom no-repeat;
+                        background-size: 16px 80px;
+                        font-family: 'Droid Sans', sans-serif !important;
+                    }
+
+                .login-block input:active, .login-block input:focus
+                {
+                    border: 1px solid #ff656c;
+                    font-family: 'Droid Sans', sans-serif !important;
+                }
+
+            .login-block button
+            {
+                width: 100%;
+                height: 40px;
+                box-sizing: border-box;
+                border-radius: 5px;
+                background: #0F75C8;
+                border: 2px solid #0F75c8;
+                color: #fff;
+                font-weight: bold;
+                text-transform: uppercase;
+                font-size: 14px;
+                font-family: Montserrat;
+                outline: none;
+                cursor: pointer;
+                font-family: 'Droid Sans', sans-serif !important;
+            }
+
+                .login-block button:hover
+                {
+                    background: #0F75C8;
+                    font-family: 'Droid Sans', sans-serif !important;
+                }
+    </style>
+
+
+    <script type="text/javascript">
+        function validateForm() {
+            debugger;
+            var uname = document.getElementById('UserName');
+            var password = document.getElementById('Password');
+
+            if (uname.value == "") {
+                alert("Enter User Name");
+
+                return false;
+            }
+            else if (password.value == "") {
+                alert("Enter Password");
+
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script>
+        function CUG() {
+            debugger;
+            var lnkdl = document.getElementById('lnkdl');
+            var txtcug = document.getElementById('cug');
+            var btnLogin = document.getElementById('btnLogin');
+            var btnDownload = document.getElementById("btnDownload");
+            if (txtcug.style.display == "none") {
+                txtcug.style.display = "block";
+                btnLogin.style.display = "none";
+                btnDownload.style.display = "block";
+                lnkdl.style.display = "none";
+            } else {
+                txtcug.style.display = "none";
+                btnLogin.style.display = "block";
+                btnDownload.style.display = "none";
+                lnkdl.style.display = "block";
+            }
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+    </script>
+    
+
+</head>
+<body>
+
+    <div class="toolbar-wrapp">
+        <!--/ popup-->
+        <!--/ login-popup-->
+    </div>
+    <!--/ toolbar-wrapp-->
+    <!-- /.modal -->
+    <!-- end topbar -->
+    <header class="header1">
+
+        <div class="container">
+            <!-- end row -->
+            <nav class="navbar navbar-default fhmm" role="navigation">
+                <div class="menudrop container">
+                    <div class="navbar-header">
+                        <button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+                    </div>
+                    <!-- end navbar-header -->
+                    <div id="defaultmenu" class="navbar-collapse collapse">
+                        <div class="row">
+                            <div class="col-sm-7" style="padding-top: 5px; padding-bottom: 5px;">
+                                <a href="#">
+                                    <img src="../../Images/logo-top-header.png" class="img-responsive"></a>
+                            </div>
+
+
+
+
+
+                        </div>
+
+                        <!-- end nav navbar-nav -->
+                    </div>
+                    <!-- end #navbar-collapse-1 -->
+                </div>
+                <!-- end dm_container -->
+            </nav>
+            <!-- end navbar navbar-default fhmm -->
+        </div>
+        <!-- end container -->
+    </header>
+
+
+
+    <div class="logo"></div>
+    <div class="login-block">
+        <h1 style="font-size: 30px;">Login</h1>
+
+        @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+        {
+
+            @Html.ValidationMessageFor(model => model.UserId, string.Empty, new { style = "float:right;margin-right:18px" })
+            @Html.TextBoxFor(m => m.UserId, new { @class = "form-control", @placeholder = "Enter User ID", @required = "required", id = "UserName" })
+
+
+            @Html.ValidationMessageFor(model => model.Password, string.Empty, new { style = "float:right;margin-right:18px" })
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Enter Password", @required = "required", id = "Password" })
+
+             
+            
+      
+            <div style="float: left; padding-bottom: 15px;">
+
+                <a href="#" id="lnkdl" onclick="CUG();">Download Contacts</a>
+            </div>
+      
+            <div style="float: right; padding-bottom: 15px;">
+
+                <a href="#">Forgot Password</a>
+            </div>
+
+            <button type="submit" id="btnLogin" onclick="return validateForm()" style="background: #0F75C8; color: #fff">Login</button>
+        }
+        
+          @using (Html.BeginForm("CheckCug", "Home", FormMethod.Post))
+          {
+              <input type="text" class="form-control" name="cug" id="cug"  style="display: none" placeholder="Enter CUG Number" onkeypress="return isNumberKey(event)" maxlength="10"/>
+                <button type="submit" id="btnDownload" onclick="return CUG()" style="background: #0F75C8; color: #fff;display: none">Download Contacts</button>
+          }
+    </div>
+
+    <section class="copyright" style="margin-top: 10px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <p style="text-align: center; color: #fff; text-transform: lowercase !important;">
+                        <small style="text-transform: capitalize !important; font-weight: 200 !important;">This Website belongs to Department of Uttar Pradesh Housing and Development Board
+                            104 Mahatma Gandhi Road, Lucknow - 226 001 (U.P.) India (State Government of Uttar Pradesh). Support No - +91-958071604&nbsp;  :<span>
+                                                                                                                                                               
+                           
+                                       
+          
+                            </span></small>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+        <!-- end row -->
+
+    </section>
+
+</body>
+</html>

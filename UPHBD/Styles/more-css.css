@@ -1,0 +1,174 @@
+/*select, .select.form-control {
+   min-height: auto !important;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: #fff url("../images/select-large-bg.png") no-repeat 95% 14px;
+    line-height: 21px;
+    color: #525151;
+    height: 35px;
+    font-size: 15px;
+}*/
+
+
+.searchHomeOnly#homeSearchContainer .propertyTypeDD_Home {
+    position: absolute;
+    z-index: 1;
+    top: 41px;
+    left: 1px;
+    background: #fff;
+    padding: 13px 1px;
+    border: 1px solid #ccc;
+    width: 539px;
+    font-size: 14px;
+    color: #666;
+    display: none;
+    box-shadow: 0 0 5px rgba(0,0,0,.2);
+}
+#homeSearchContainer .propertyTypeDD_Home {
+    position: absolute;
+    z-index: 1;
+    top: 49px;
+    left: 1px;
+    background: #fff;
+    padding: 13px 1px;
+    border: 1px solid #ccc;
+    width: 539px;
+    font-size: 14px;
+    color: #666;
+    display: none;
+    box-shadow: 0 9px 13px -12px rgba(0,0,0,0.75);
+}
+
+
+.feature-title
+{
+	text-align: center;
+    color: #fff;
+    background-color: #333836;
+    margin-top: 0px !important;
+    padding-top: 10px;
+    font-weight: none !important;
+}
+
+
+.step-text {
+    float: left;
+    width: 210px;
+    margin-top: 4px;
+    font-size: 25px !important;
+    margin-left: 25px;
+}
+
+
+.steps-wise {
+    float: left;
+    width: 20px;
+    margin-top: 2px;
+    font-size: 19px;
+}
+
+.steps-round {
+    float: left;
+    width: 430px;
+}
+
+.steps-form {
+    width: 100%;
+    float: left;
+    position: relative;
+    margin-top: 25px;
+    margin-left: 40px;
+}
+
+.secure {
+    width: 100%;
+    float: left;
+    position: relative;
+    margin-top: 25px;
+    margin-left: 40px;
+}
+
+
+.secure-alert {
+    float: left;
+    width: 132px;
+    margin-top: 4px;
+    font-size: 25px !important;
+    margin-left: 25px;
+}
+
+.sec-pass {
+    float: left;
+    width: 480px;
+}
+
+.secure {
+    width: 100%;
+    float: left;
+    position: relative;
+    margin-top: 25px;
+    margin-left: 40px;
+}
+
+.terms {
+    width: 100%;
+    float: left;
+    position: relative;
+    margin-top: 25px;
+    margin-left: 40px;
+}
+
+.terms {
+    width: 100%;
+    float: left;
+    position: relative;
+    margin-top: 25px;
+    margin-left: 40px;
+}
+
+
+.secure-alert {
+  float: left;
+    width: 209px;
+    margin-top: 4px;
+    font-size: 25px !important;
+    margin-left: 25px;
+}
+
+.sec-pass {
+    float: left;
+    width: 480px;
+}
+
+
+.terms {
+    width: 100%;
+    float: left;
+    position: relative;
+    margin-top: 25px;
+    margin-left: 40px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

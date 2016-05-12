@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="UPHBDModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="UPHBDModelStoreContainer">
+          <EntitySet Name="Designation" EntityType="UPHBDModel.Store.Designation" store:Type="Tables" store:Schema="dbo" store:Name="Designation">
+            <DefiningQuery>SELECT 
+      [Designation].[id] AS [id], 
+      [Designation].[DesignationName] AS [DesignationName]
+      FROM [dbo].[Designation] AS [Designation]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Directory" EntityType="UPHBDModel.Store.Directory" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="OfficerLogin" EntityType="UPHBDModel.Store.OfficerLogin" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'admin_avpdir.dbo.Designation' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="Designation">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DesignationName" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="Directory">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Designation" Type="nvarchar" MaxLength="255" />
+          <Property Name="CUGNo" Type="nvarchar" MaxLength="255" />
+          <Property Name="GCM" Type="nvarchar" MaxLength="1000" />
+          <Property Name="IEMEI" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="OfficerLogin">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+          <Property Name="Status" Type="bit" />
+          <Property Name="EmailId" Type="varchar" MaxLength="30" />
+          <Property Name="Mobile" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <Function Name="spCreateDirectory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="Designation" Type="nvarchar" Mode="In" />
+          <Parameter Name="CUGNo" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spUpdateDirectory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="Designation" Type="nvarchar" Mode="In" />
+          <Parameter Name="CUGNo" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spUpdateGCM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="GCM" Type="nvarchar" Mode="In" />
+          <Parameter Name="IEMEI" Type="nvarchar" Mode="In" />
+          <Parameter Name="CUGNo" Type="nvarchar" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UPHBDModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="UPHBDContext" p1:LazyLoadingEnabled="true" >
+          <EntitySet Name="Directories" EntityType="UPHBDModel.Directory" />
+          <FunctionImport Name="spUpdateDirectory">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Designation" Mode="In" Type="String" />
+            <Parameter Name="CUGNo" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="OfficerLogins" EntityType="UPHBDModel.OfficerLogin" />
+          <EntitySet Name="Designations" EntityType="UPHBDModel.Designation" />
+          <FunctionImport Name="spCreateDirectory">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Designation" Mode="In" Type="String" />
+            <Parameter Name="CUGNo" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spUpdateGCM">
+            <Parameter Name="GCM" Mode="In" Type="String" />
+            <Parameter Name="IEMEI" Mode="In" Type="String" />
+            <Parameter Name="CUGNo" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Directory">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Designation" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CUGNo" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="GCM" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="IEMEI" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="OfficerLogin">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Type="String" Name="UserId" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Password" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="Status" />
+          <Property Type="String" Name="EmailId" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Mobile" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Designation">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="DesignationName" MaxLength="150" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="UPHBDModelStoreContainer" CdmEntityContainer="UPHBDContext" >
+          <EntitySetMapping Name="Directories">
+            <EntityTypeMapping TypeName="UPHBDModel.Directory">
+              <MappingFragment StoreEntitySet="Directory">
+                <ScalarProperty Name="IEMEI" ColumnName="IEMEI" />
+                <ScalarProperty Name="GCM" ColumnName="GCM" />
+                <ScalarProperty Name="CUGNo" ColumnName="CUGNo" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spUpdateDirectory" FunctionName="UPHBDModel.Store.spUpdateDirectory" />
+          <EntitySetMapping Name="OfficerLogins">
+            <EntityTypeMapping TypeName="UPHBDModel.OfficerLogin">
+              <MappingFragment StoreEntitySet="OfficerLogin">
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Designations">
+            <EntityTypeMapping TypeName="UPHBDModel.Designation">
+              <MappingFragment StoreEntitySet="Designation">
+                <ScalarProperty Name="DesignationName" ColumnName="DesignationName" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spCreateDirectory" FunctionName="UPHBDModel.Store.spCreateDirectory" />
+          <FunctionImportMapping FunctionImportName="spUpdateGCM" FunctionName="UPHBDModel.Store.spUpdateGCM" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

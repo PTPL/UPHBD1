@@ -1,0 +1,190 @@
+﻿@model UPHBD.Models.Directory
+@{
+    ViewBag.Title = "Directory";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@Html.Raw(TempData["msg"])
+@Html.Raw(TempData["Submit"])
+@Html.Raw(TempData["Delete"])
+<script src="~/Scripts/jquery-1.12.0.min.js"></script>
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<link href="~/Styles/jquery.dataTables.min.css" rel="stylesheet" />
+<script>
+    $(document).ready(function () {
+        $('#example2').DataTable();
+    });
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $("select").addClass("form-control");
+
+        $("#Designation").on("change", function () {
+            debugger;
+            $("#hidText").val($("#Designation option:selected"));
+
+        });
+
+
+    });
+</script>
+<script>
+    $(function () {
+        $("form").submit(function () {
+            var selTypeText = $("#Designation option:selected").text();
+            $("#hidText").val(selTypeText);
+        });
+    });
+</script>
+
+<script type="text/javascript">
+   
+</script>
+
+<section class="content">
+
+    <div class="row">
+
+        @using (Html.BeginForm(@ViewData["Action"].ToString(), "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Directory</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form role="form">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label>Name</label>
+                                @Html.HiddenFor(model => model.id)
+                                @Html.ValidationMessageFor(model => model.Name, string.Empty, new { style = "float:right;margin-right:18px" })
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @placeholder = "Enter Name", @required = "required" })
+                            </div>
+
+                            <div class="form-group">
+                                <label>Designation</label>
+                                @*@Html.DropDownList("Designation", (IEnumerable<SelectListItem>)ViewBag.Designation, "---Select Designation---")*@
+                                 @Html.DropDownList("Designation", "---Select Designation---")
+                                <input type="hidden" id="hidText" name="hidText" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>CUG Number</label>
+                                @Html.ValidationMessageFor(model => model.CUGNo, string.Empty, new { style = "float:right;margin-right:18px" })
+                                @Html.TextBoxFor(m => m.CUGNo, new { @class = "form-control", @placeholder = "Enter CUG No", @required = "required" })
+                            </div>
+
+                        </div>
+                        <!-- /.box-body -->
+
+                        <div class="box-footer">
+                            <button type="submit" value="Home" class="btn btn-primary" disabled="@ViewData["btnSubmit"]" onclick="location.href='<@Url.Action("CreateDirectory", "Admin")">Submit</button>
+                            <button type="submit" value="Edit" class="btn btn-primary" disabled="@ViewData["btnUpdate"]" onclick="location.href='<@Url.Action("EditDirectory", "Admin")">Update</button>
+
+
+                        </div>
+
+
+                    </form>
+                </div>
+                <!-- /.box -->
+            </div>
+        }
+
+        <!--/.col (left) -->
+    </div>
+
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Details</h3>
+
+        </div>
+
+        <div class="box-body">
+            @using (Html.BeginForm("GenerateVCard", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <button type="submit" value="Generate" class="btn btn-primary"  onclick=" location.href = '<@Url.Action("GenerateVCard", "Admin")">Generate</button>
+            }
+            <br/>
+            <div class="holder"></div>
+
+            <table id="example2" class="table table-bordered table-hover" style="background: white">
+                <thead>
+                    <tr>
+                        <th style="width: 100px">
+                            Sr. No.
+                        </th>
+                        <th style="width: 305px">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th style="width: 305px">
+                            @Html.DisplayNameFor(model => model.Designation)
+                        </th>
+                        <th style="width: 305px">
+                            @Html.DisplayNameFor(model => model.CUGNo)
+                        </th>
+
+                        <th style="width: 120px">Action
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody id="News">
+                    @{int rowNo = 0;}
+                    @foreach (var item in (IEnumerable<UPHBD.Models.Directory>)ViewData["Directory"])
+                    {
+                        using (Html.BeginForm("DeleteDirectory", "Admin", new { item.id }))
+                        {
+                        <tr>
+                            <td >
+                                @(rowNo += 1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Designation)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CUGNo)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Edit", "EditDirectory", new { item.id }) |
+
+                                  
+                                    <input type="submit" value="Delete" onclick=" return confirm('Are you sure you want to delete?'); " />
+
+                            </td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <div class="holder"></div>
+        </div>
+    </div>
+</section>
+
+<link href="~/Styles/jPages.css" rel="stylesheet" />
+<script src="~/Scripts/jPages.min.js"></script>
+
+@*<script type="text/javascript">
+    $(function () {
+        $("div.holder").jPages({
+            containerID: "News",
+            previous: "←",
+            next: "→",
+            perPage: 20,
+            delay: 20
+        });
+    });
+</script>*@
