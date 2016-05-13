@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -105,7 +106,7 @@ namespace UPHBD.Areas.Admin.Controllers
 
                 //----------- Push Notification --------------------
 
-                AndroidPush(_db.Directories.First().GCM);
+                SendPushNotification();
                 //-----------------------------------
 
                 TempData["msg"] = "<script>alert('Updated succesfully');</script>";
@@ -226,6 +227,7 @@ namespace UPHBD.Areas.Admin.Controllers
         {
             // your RegistrationID paste here which is received from GCM server.                                                               
             string regId = "fevT3FBkoZI:APA91bFN54T2vZLsOghSxUtW3weTjJ_wNfyXwnW3w-F6U3qfkq3rfS0zkMQX7O8Lx9aQZdCX0F6PChjPU3BYHcTphsjU4RO5VXUgbvKaFcKK57RggpH6ODm3sQCMAROQuLiqfK0XYQU2";
+            regId = reg;
             // applicationID means google Api key                                                                                                     
             var applicationID = "AIzaSyA2Wkdnp__rBokCmyloMFfENchJQb59tX8";
             // SENDER_ID is nothing but your ProjectID (from API Console- google code)//                                          
@@ -239,7 +241,7 @@ namespace UPHBD.Areas.Admin.Controllers
 
             tRequest.Method = "post";
 
-            tRequest.ContentType = " application/x-www-form-urlencoded;charset=UTF-8";
+            tRequest.ContentType = "application/x-www-form-urlencoded;charset=UTF-8";
 
             tRequest.Headers.Add(string.Format("Authorization: key={0}", applicationID));
 
@@ -270,7 +272,7 @@ namespace UPHBD.Areas.Admin.Controllers
 
             StreamReader tReader = new StreamReader(dataStream);
 
-            String sResponseFromServer = tReader.ReadToEnd();   //Get response from GCM server.
+            string sResponseFromServer = tReader.ReadToEnd();   //Get response from GCM server.
 
             tReader.Close();
 
@@ -278,6 +280,54 @@ namespace UPHBD.Areas.Admin.Controllers
             tResponse.Close();
         }
 
+        public void SendPushNotification()
+        {
 
+            string stringregIds = null;
+            List<string> regIDs = _db.Directories.Where(i => i.GCM != null && i.GCM != "").Select(i => i.GCM).ToList();
+            //Here I add the registrationID that I used in Method #1 to regIDs
+            stringregIds = string.Join("\",\"", regIDs);
+            //To Join the values (if ever there are more than 1) with quotes and commas for the Json format below
+
+            try
+            {
+                string GoogleAppID = "AIzaSyA2Wkdnp__rBokCmyloMFfENchJQb59tX8";
+                var SENDER_ID = "925760665756";
+                var value = "Hello";
+                WebRequest tRequest;
+                tRequest = WebRequest.Create("https://android.googleapis.com/gcm/send");
+                tRequest.Method = "post";
+                Request.ContentType = "application/json";
+                tRequest.Headers.Add(string.Format("Authorization: key={0}", GoogleAppID));
+                tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
+
+                string postData = "{\"collapse_key\":\"score_update\",\"time_to_live\":108,\"delay_while_idle\":true,\"data\": { \"message\" : " + "\"" + value + "\",\"time\": " + "\"" + System.DateTime.Now.ToString() + "\"},\"registration_ids\":[\"" + stringregIds + "\"]}";
+
+                Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                tRequest.ContentLength = byteArray.Length;
+
+                Stream dataStream = tRequest.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                WebResponse tResponse = tRequest.GetResponse();
+
+                dataStream = tResponse.GetResponseStream();
+
+                StreamReader tReader = new StreamReader(dataStream);
+
+                string sResponseFromServer = tReader.ReadToEnd();
+
+                HttpWebResponse httpResponse = (HttpWebResponse)tResponse;
+                string statusCode = httpResponse.StatusCode.ToString();
+
+                tReader.Close();
+                dataStream.Close();
+                tResponse.Close();
+            }
+            catch
+            {
+            }
+        }
     }
 }

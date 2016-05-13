@@ -160,9 +160,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service1.svc.cs">
       <DependentUpon>Service1.svc</DependentUpon>
@@ -366,9 +363,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>UPHBD.cs</LastGenOutput>
     </Content>
-    <Content Include="obj\Debug\TempPE\Models.UPHBD.Context.cs.dll" />
-    <Content Include="obj\Debug\TempPE\Models.UPHBD.cs.dll" />
-    <Content Include="obj\Debug\TempPE\Models.UPHBD.Designer.cs.dll" />
     <Content Include="Scripts\jPages.min.js" />
     <Content Include="Scripts\jquery-1.12.0.min.js" />
     <Content Include="Scripts\jquery.dataTables.min.js" />
@@ -392,7 +386,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="obj\Debug\edmxResourcesToEmbed\Models\" />
+    <Folder Include="obj\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -417,10 +411,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Login.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\UPHBD.pubxml" />
