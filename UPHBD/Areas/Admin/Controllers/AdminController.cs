@@ -297,9 +297,9 @@ namespace UPHBD.Areas.Admin.Controllers
                 WebRequest tRequest;
                 tRequest = WebRequest.Create("https://android.googleapis.com/gcm/send");
                 tRequest.Method = "post";
-                Request.ContentType = "application/json";
+                Request.ContentType = "application/json;charset=UTF-8";
                 tRequest.Headers.Add(string.Format("Authorization: key={0}", GoogleAppID));
-                tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
+                //tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
 
                 string postData = "{\"collapse_key\":\"score_update\",\"time_to_live\":108,\"delay_while_idle\":true,\"data\": { \"message\" : " + "\"" + value + "\",\"time\": " + "\"" + System.DateTime.Now.ToString() + "\"},\"registration_ids\":[\"" + stringregIds + "\"]}";
 
@@ -317,7 +317,7 @@ namespace UPHBD.Areas.Admin.Controllers
                 StreamReader tReader = new StreamReader(dataStream);
 
                 string sResponseFromServer = tReader.ReadToEnd();
-
+                TempData["msg1"] = "<script>alert('" + sResponseFromServer + "');</script>";
                 HttpWebResponse httpResponse = (HttpWebResponse)tResponse;
                 string statusCode = httpResponse.StatusCode.ToString();
 
@@ -325,7 +325,7 @@ namespace UPHBD.Areas.Admin.Controllers
                 dataStream.Close();
                 tResponse.Close();
             }
-            catch
+            catch (Exception ex)
             {
             }
         }
