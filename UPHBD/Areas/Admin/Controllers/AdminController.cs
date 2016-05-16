@@ -293,9 +293,7 @@ namespace UPHBD.Areas.Admin.Controllers
                 var regIds = regIDs.Skip(skip).Take(batchSize);
                 string stringregIds = null;
 
-                //Here I add the registrationID that I used in Method #1 to regIDs
-                stringregIds = string.Join("\",\"", regIds);
-                //To Join the values (if ever there are more than 1) with quotes and commas for the Json format below
+                //stringregIds = string.Join("\",\"", regIds);
                 skip += batchSize;
                 try
                 {
@@ -312,13 +310,17 @@ namespace UPHBD.Areas.Admin.Controllers
 
 
                     JObject notificationData = new JObject(
-                    new JProperty("registration_ids", new JArray(_db.Directories.Where(i => i.GCM != null && i.GCM != "").Select(i => i.GCM).ToList())),
+                    new JProperty("registration_ids", new JArray(regIds)),
+                    new JProperty("collapse_key", "score_update"),
+                    new JProperty("time_to_live", 108),
+                    new JProperty("delay_while_idle", true),
                     new JProperty("data", new JObject(
                         new JProperty("title", "Contact updated"),
+                        new JProperty("time", "" + DateTime.Now.ToString() + ""),
                         new JProperty("message", JObject.FromObject(dir))
                     )));
                     string contentText = notificationData.ToString(Newtonsoft.Json.Formatting.None);
-                    string postData = "{\"collapse_key\":\"score_update\",\"time_to_live\":108,\"delay_while_idle\":true,\"data\": { \"title\" : " + "\"Contact updated\",\"message\" : " + "\"" + value + "\",\"time\": " + "\"" + System.DateTime.Now.ToString() + "\"},\"registration_ids\":[\"" + stringregIds + "\"]}";
+                    //string postData = "{\"collapse_key\":\"score_update\",\"time_to_live\":108,\"delay_while_idle\":true,\"data\": { \"title\" : " + "\"Contact updated\",\"message\" : " + "\"" + value + "\",\"time\": " + "\"" + System.DateTime.Now.ToString() + "\"},\"registration_ids\":[\"" + stringregIds + "\"]}";
                     Byte[] byteArray = Encoding.UTF8.GetBytes(contentText);
                     tRequest.ContentLength = byteArray.Length;
 
