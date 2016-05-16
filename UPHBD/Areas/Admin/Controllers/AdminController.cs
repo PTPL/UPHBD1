@@ -6,14 +6,16 @@ using System.Net;
 using System.Text;
 using System.Web.Mvc;
 using UPHBD.Models;
-
-
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace UPHBD.Areas.Admin.Controllers
 {
     public class AdminController : Controller
     {
-        readonly UPHBDContext _db = new UPHBDContext();
+        readonly static UPHBDContext _db = new UPHBDContext();
+        private const string GcmHttpUrl = "https://gcm-http.googleapis.com/gcm/send";
+        private const string GcmApiKey = "AIzaSyA2Wkdnp__rBokCmyloMFfENchJQb59tX8";
 
         [HttpGet]
         public ActionResult Directory()
@@ -106,7 +108,8 @@ namespace UPHBD.Areas.Admin.Controllers
 
                 //----------- Push Notification --------------------
 
-                SendPushNotification();
+                SendPushNotification(directory);
+                //SendGCMNotification("Hi", "Hi, this is a Test").Wait();
                 //-----------------------------------
 
                 TempData["msg"] = "<script>alert('Updated succesfully');</script>";
@@ -280,53 +283,127 @@ namespace UPHBD.Areas.Admin.Controllers
             tResponse.Close();
         }
 
-        public void SendPushNotification()
+        public void SendPushNotification(Models.Directory dir)
         {
-
-            string stringregIds = null;
             List<string> regIDs = _db.Directories.Where(i => i.GCM != null && i.GCM != "").Select(i => i.GCM).ToList();
-            //Here I add the registrationID that I used in Method #1 to regIDs
-            stringregIds = string.Join("\",\"", regIDs);
-            //To Join the values (if ever there are more than 1) with quotes and commas for the Json format below
+            var skip = 0;
+            const int batchSize = 1000;
+            while (skip < regIDs.Count)
+            {
+                var regIds = regIDs.Skip(skip).Take(batchSize);
+                string stringregIds = null;
+
+                //Here I add the registrationID that I used in Method #1 to regIDs
+                stringregIds = string.Join("\",\"", regIds);
+                //To Join the values (if ever there are more than 1) with quotes and commas for the Json format below
+                skip += batchSize;
+                try
+                {
+                    string GoogleAppID = "AIzaSyA2Wkdnp__rBokCmyloMFfENchJQb59tX8";
+                    var SENDER_ID = "925760665756";
+                    var value = "Hello";
+                    WebRequest tRequest;
+                    tRequest = WebRequest.Create("https://android.googleapis.com/gcm/send");
+                    tRequest.Method = "post";
+                    tRequest.ContentType = "application/json;charset=UTF-8";
+                    //tRequest.Headers.Add(string.Format("Authorization: key={0}", GoogleAppID));
+                    tRequest.Headers.Add("Authorization", "key=" + GoogleAppID);
+                    //tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
+
+
+                    JObject notificationData = new JObject(
+                    new JProperty("registration_ids", new JArray(_db.Directories.Where(i => i.GCM != null && i.GCM != "").Select(i => i.GCM).ToList())),
+                    new JProperty("data", new JObject(
+                        new JProperty("title", "Contact updated"),
+                        new JProperty("message", JObject.FromObject(dir))
+                    )));
+                    string contentText = notificationData.ToString(Newtonsoft.Json.Formatting.None);
+                    string postData = "{\"collapse_key\":\"score_update\",\"time_to_live\":108,\"delay_while_idle\":true,\"data\": { \"title\" : " + "\"Contact updated\",\"message\" : " + "\"" + value + "\",\"time\": " + "\"" + System.DateTime.Now.ToString() + "\"},\"registration_ids\":[\"" + stringregIds + "\"]}";
+                    Byte[] byteArray = Encoding.UTF8.GetBytes(contentText);
+                    tRequest.ContentLength = byteArray.Length;
+
+                    Stream dataStream = tRequest.GetRequestStream();
+                    dataStream.Write(byteArray, 0, byteArray.Length);
+                    dataStream.Close();
+
+                    WebResponse tResponse = tRequest.GetResponse();
+
+                    dataStream = tResponse.GetResponseStream();
+
+                    StreamReader tReader = new StreamReader(dataStream);
+
+                    string sResponseFromServer = tReader.ReadToEnd();
+                    TempData["msg1"] = "<script>alert('" + sResponseFromServer + "');</script>";
+                    HttpWebResponse httpResponse = (HttpWebResponse)tResponse;
+                    string statusCode = httpResponse.StatusCode.ToString();
+
+                    tReader.Close();
+                    dataStream.Close();
+                    tResponse.Close();
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
+
+        private static async Task SendGCMNotification(string title, string body)
+        {
+            // Create the notification payload.
+            JObject notificationData = new JObject(
+                new JProperty("registration_ids", new JArray(_db.Directories.Where(i => i.GCM != null && i.GCM != "").Select(i => i.GCM).ToList())),
+                new JProperty("data", new JObject(
+                    new JProperty("title", title),
+                    new JProperty("message", body)
+                ))
+            );
+            string contentText = notificationData.ToString(Newtonsoft.Json.Formatting.None);
+            byte[] content = Encoding.UTF8.GetBytes(contentText);
 
             try
             {
-                string GoogleAppID = "AIzaSyA2Wkdnp__rBokCmyloMFfENchJQb59tX8";
-                var SENDER_ID = "925760665756";
-                var value = "Hello";
-                WebRequest tRequest;
-                tRequest = WebRequest.Create("https://android.googleapis.com/gcm/send");
-                tRequest.Method = "post";
-                Request.ContentType = "application/json;charset=UTF-8";
-                tRequest.Headers.Add(string.Format("Authorization: key={0}", GoogleAppID));
-                //tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
+                HttpWebRequest req = WebRequest.CreateHttp(GcmHttpUrl);
+                req.Method = "POST";
+                // Disable expect-100 to improve latency
+                req.ServicePoint.Expect100Continue = false;
+                req.ContentType = "application/json";
+                req.ContentLength = content.Length;
+                req.Headers.Add("Authorization", "key=" + GcmApiKey);
 
-                string postData = "{\"collapse_key\":\"score_update\",\"time_to_live\":108,\"delay_while_idle\":true,\"data\": { \"message\" : " + "\"" + value + "\",\"time\": " + "\"" + System.DateTime.Now.ToString() + "\"},\"registration_ids\":[\"" + stringregIds + "\"]}";
+                using (Stream s = await req.GetRequestStreamAsync())
+                {
+                    await s.WriteAsync(content, 0, content.Length);
+                }
 
-                Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                tRequest.ContentLength = byteArray.Length;
+                // Receive the HTTP response.
+                string response;
+                using (HttpWebResponse res = (HttpWebResponse)await req.GetResponseAsync())
+                {
+                    // Read the request body
+                    using (TextReader r = new StreamReader(res.GetResponseStream(), Encoding.UTF8, true))
+                    {
+                        response = await r.ReadToEndAsync();
+                    }
+                }
 
-                Stream dataStream = tRequest.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
+                Console.WriteLine("Response: " + response);
 
-                WebResponse tResponse = tRequest.GetResponse();
-
-                dataStream = tResponse.GetResponseStream();
-
-                StreamReader tReader = new StreamReader(dataStream);
-
-                string sResponseFromServer = tReader.ReadToEnd();
-                TempData["msg1"] = "<script>alert('" + sResponseFromServer + "');</script>";
-                HttpWebResponse httpResponse = (HttpWebResponse)tResponse;
-                string statusCode = httpResponse.StatusCode.ToString();
-
-                tReader.Close();
-                dataStream.Close();
-                tResponse.Close();
+                // Parse the response here...
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Exception: " + ex.ToString());
+
+                if (ex is WebException)
+                {
+                    WebException webex = (WebException)ex;
+                    if (webex.Response != null)
+                    {
+                        HttpStatusCode status = ((HttpWebResponse)webex.Response).StatusCode;
+                        // Check the status code here...
+                    }
+
+                }
             }
         }
     }
